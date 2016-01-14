@@ -1,0 +1,32 @@
+.weather {
+	width: 300px;
+	height: 200px;
+	background-color: #C0EBFA;
+}
+
+.weather__image {
+	display: block;
+	margin: 0 auto 20px;
+}
+
+.weather-location__name {
+	text-align: center;
+	margin: 0 0 20px;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.weather-temp {
+	margin: 0 auto 20px;
+	text-align: center;
+}
+
+.weather-temp > div {
+	display: inline-block;
+	text-align: center;
+	margin: 0 30px;
+}
+
+.city {
+	display: none;
+}
