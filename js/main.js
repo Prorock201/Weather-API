@@ -1,5 +1,5 @@
-$(function() {
-	$.widget( "custom.weatherWidjet", {
+(function($) {
+	var methods = {
 		options: {},
 		store: {
 			weather: {
@@ -14,7 +14,6 @@ $(function() {
 
 		_create: function() {
 			this._getLocation();
-			
 		},
 
 		_getLocation: function() {
@@ -29,7 +28,7 @@ $(function() {
 		_selectCity: function() {
 			var that = this;
 			var cache = {};
-			$(".city").css('display', 'block');
+			that._renderSelect();
 			$(".city").autocomplete({
 				source: function( request, response ) {
 					var term = request.term;
@@ -53,7 +52,7 @@ $(function() {
 				select: function( event, ui ) {
 					var position = ui.item.value;
 					$(".class").css('display', 'none');
-					that._getData(position);
+					that._destroyData()._getData(position);
 				},
 			});
 		},
@@ -74,31 +73,44 @@ $(function() {
 		},
 
 		_parseData: function(data) {
-			console.log(data);
-			var obj = this.store.weather;
+		  var obj = this.store.weather;
 			var fah = 273.15;
-			obj.temp = data.main.temp - fah;
-			obj.temp_min = data.main.temp_min - fah;
-			obj.temp_max = data.main.temp_max - fah;
+			obj.temp = Math.round(data.main.temp - fah);
+			obj.temp_min = Math.round(data.main.temp_min - fah);
+			obj.temp_max = Math.round(data.main.temp_max - fah);
 			obj.city = data.name;
 			obj.country = data.sys.country;
 			obj.weather_img = 'http://openweathermap.org/img/w/'+ data.weather[0].icon +'.png';
 			this._renderData();
 		},
 
+		_renderSelect: function() {
+			var select = '<input class="city" type="text">';
+			$('.weather-location__name').empty(select);
+			$('.weather__image').after(select);
+		},
+
 		_renderData: function() {
+			var that = this;
 			var obj = this.store.weather;
-			console.log(obj.weather_img);
 			var template = '<img class="weather__image" src="' + obj.weather_img + 
 										 '" alt=""><div class="weather-location__name">' + obj.city + ', ' + obj.country +
 										 '</div><div class="weather-temp"><div class="weather-temp__min">' + obj.temp_min + 
 										 '</div><div class="weather-temp__max">' + obj.temp_max + '</div></div>';
 			$('.weather').append(template);
-			$('.weather-location__name').on('click', this._selectCity);
+			$('.weather-location__name').on('click', that._selectCity.bind(this));
 		},
-	});
-	$('.weather').weatherWidjet();
-});
+
+		_destroyData: function() {
+			$('.weather').empty();
+			return this;
+		},
+	};
+	$.fn.weatherApi = function() {
+		methods._create();
+  };
+	$('.weather').weatherApi();
+})(jQuery);
 
 
 
