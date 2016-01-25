@@ -1,42 +1,116 @@
-.weather {
+* {
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 18px;
 	font-weight: bold;
 	color: #fff;
+	text-shadow: 1px 1px 1px #000;
+	-webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;   
+}
+
+.weather {
 	width: 300px;
-	height: 200px;
-	background: url(../img/background.jpg) 0 0 no-repeat;
-	border: 1px solid black;
+	height: 300px;
+	background: url(../img/background.png);
+	border: 1px solid gray;
 	border-radius: 10px;
-	box-shadow: 3px 3px 10px gray;
+	box-shadow: 3px 3px 3px gray;
+}
+
+.holder {
+	width: 90%;
+	height: 80%;
+	margin: 10% auto 0;
+	border: 3px solid #4f5f76;
+	border-radius: 10px;
+	background: rgba(43,67,103,0.5);
 }
 
 .weather__image {
-	width: 100px;
-	height: 100px;
+	width: 150px;
+	height: 150px;
 	display: block;
 	margin: 0 auto;
 }
 
+.weather-location {
+	font-size: 0;
+	line-height: 0;
+	padding: 20px 0 0;
+	margin: 0 0 10px;
+}
+
+.save-location {
+	width: 15%;
+	display: inline-block;
+}
+
 .weather-location__name {
 	text-align: center;
-	margin: 0 0 20px;
 	cursor: pointer;
 	text-decoration: underline;
+	font-size: 14px;
+	line-height: 1;
+	width: 75%;
+	display: inline-block;
 }
 
 .weather-temp {
-	margin: 0 auto 20px;
+	margin: 0 auto 10px;
 	text-align: center;
 }
 
 .weather-temp > div {
 	display: inline-block;
 	text-align: center;
-	margin: 0 30px;
+	margin: 0 15px;
+}
+
+.weather-title {
+	font-size: 14px;
+	padding: 10px 0 0;
+	text-align: center;
 }
 
 .city {
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	text-shadow: 1px 1px 1px #000;
 	display: block;
-	margin: 0 auto;
+	width: 77%;
+	text-align: center;
+	margin: 20px auto 10px;
+	border: 1px solid #fff;
+	border-radius: 5px;
+	background: rgba(145,227,255,0.5);
+}
+
+.city:focus, .save-location:focus {
+	outline: none;
+}
+
+.ui-autocomplete.ui-widget {
+	width: 200px;
+	overflow: hidden;
+	background: rgba(145,227,255,0.5);
+}
+
+.ui-autocomplete.ui-widget .ui-menu-item {
+	font-size: 12px;
+	color: #fff;
+	text-shadow: 1px 1px 1px #000;
+	border: 0;
+}
+
+.ui-autocomplete .ui-menu-item.ui-state-focus {
+	color: #000;
+	background: transparent;
 }
