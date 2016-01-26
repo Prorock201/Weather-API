@@ -1,8 +1,6 @@
 ;(function($) {
 	'use strict';
-
 	var pluginName = 'weather';
-
 	var settings = {
 		url: 'http://api.openweathermap.org/data/2.5/weather?',
 		general: {
@@ -10,7 +8,6 @@
 			lang: 'en',
 		},
 	};
-
 	var weather = {
 		country: '',
 		city: '',
@@ -21,7 +18,6 @@
 		weather_back: '',
 		fixLocation: false,
 	};
-
 	var location = {
 		geoData: {
 			lat: '',
