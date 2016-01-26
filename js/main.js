@@ -1,6 +1,8 @@
 ;(function($) {
 	'use strict';
+
 	var pluginName = 'weather';
+
 	var settings = {
 		url: 'http://api.openweathermap.org/data/2.5/weather?',
 		general: {
@@ -8,6 +10,7 @@
 			lang: 'en',
 		},
 	};
+
 	var weather = {
 		country: '',
 		city: '',
@@ -18,6 +21,7 @@
 		weather_back: '',
 		fixLocation: false,
 	};
+
 	var location = {
 		geoData: {
 			lat: '',
@@ -27,6 +31,7 @@
 			q: '',
 		}
 	};
+
 	function Plugin (element, options) {
 		var _this = this;
 		this.element = element;
@@ -34,6 +39,7 @@
 		this._name = pluginName + $(this.element).index();
 		this._init();
 	};
+	
 	$.fn.weatherApi = function(options) {
 		this.each(function() {
 			if (!$.data(this, "plugin_" + pluginName))
