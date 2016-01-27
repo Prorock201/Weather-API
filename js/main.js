@@ -1,16 +1,13 @@
 ;(function($) {
 	'use strict';
-
 	var pluginName = 'weather';
-
 	var settings = {
 		url: 'http://api.openweathermap.org/data/2.5/weather?',
 		general: {
-			appid: 'dcb260f54b95ad139c9a9f91e651b831',
+			appid: '9b04faa3ead0b41e8a12f2b0afa803d8',
 			lang: 'en',
 		},
 	};
-
 	var weather = {
 		country: '',
 		city: '',
@@ -21,7 +18,6 @@
 		weather_back: '',
 		fixLocation: false,
 	};
-
 	var location = {
 		geoData: {
 			lat: '',
@@ -31,7 +27,6 @@
 			q: '',
 		}
 	};
-
 	function Plugin (element, options) {
 		var _this = this;
 		this.element = element;
@@ -39,11 +34,11 @@
 		this._name = pluginName + $(this.element).index();
 		this._init();
 	};
-	
 	$.fn.weatherApi = function(options) {
 		this.each(function() {
-			if (!$.data(this, "plugin_" + pluginName))
-				$.data(this, "plugin_" + pluginName, new Plugin(this, options));
+			if (!$.data(this, `plugin_${pluginName}`)) {
+				$.data(this, `plugin_${pluginName}`, new Plugin(this, options));
+			}
 		});
 		return this;
 	};
@@ -87,9 +82,9 @@
 				},
 				minLength: 3,
 				select: function( event, ui ) {
-					var position = ui.item.value;
+					let position = ui.item.value;
 					that.settings.fixLocation = false;
-					that._destroyData();
+					that._destroyView();
 					that._getData(position);
 				},
 			});
@@ -105,9 +100,8 @@
 			}
 		},
 		_parseUrl: function(source, location, sett){
-			return  source + 
-			$.map(location, function(val,key) {return (key+'='+val)}).join('&') +
-			'&' + $.map(sett, function(val,key){return (key+'='+val)}).join('&');
+			return `${source}${$.map(location, function(val,key){return (key+'='+val)}).join('&')}&
+			${$.map(sett, function(val,key){return (key+'='+val)}).join('&')}`;
 		},
 		_parseData: function(data){
 			var obj = this.settings;
@@ -118,47 +112,43 @@
 			obj.temp_max = ((dat.temp_max>fah)?'+':'') + Math.round(dat.temp_max - fah);
 			obj.city = data.name;
 			obj.country = data.sys.country;
-			obj.weather_img = 'http://openweathermap.org/img/w/'+ data.weather[0].icon +'.png';
+			obj.weather_img = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
 			this._renderData();
 		},
 		_renderSelect: function(){
-			var title = '<h3 class="weather-title">Input city</h3>';
-			var select = '<input class="city" type="text">';
-			$(this.element).find('.weather-location').css('display', 'none');
-			$(this.element).find('.weather__image').css('display', 'none');
-			$(this.element).find('.weather-temp').css('display', 'none');
-			$(this.element).find('.holder').prepend(select);
-			$(this.element).find('.holder').prepend(title);
+			let template = 
+				`<div class="holder">
+					<h3 class="weather-title">Input city</h3>
+					<input class="city" type="text">
+				</div>`;
+			this._destroyView();
+			$(this.element).prepend(template);
 			$(this.element).find('.city').focus();
-			$(this.element).find('.city').on('focusout', this._getBackSelect.bind(this));
-		},
-		_getBackSelect: function(){
-			var currentCity = $(this.element).find('.weather-location');
-			if (currentCity.length != 0) {
-				$(this.element).find('.weather-title').remove();
-				$(this.element).find('.city').remove();
-				$(currentCity).css('display', 'block');
-				$(this.element).find('.weather__image').css('display', 'block');
-				$(this.element).find('.weather-temp').css('display', 'block');
-			};
+			$(this.element).find('.city').on('focusout', this._renderData.bind(this));
 		},
 		_renderData: function(){
-			var obj = this.settings;
-			var template = '<div class="holder"><p class="weather-location"><input class="save-location"' + 
-			' type="checkbox" name="checkbox" id="saveLocation"/>' +
-			'<span class="weather-location__name">' + obj.city + ', ' + obj.country + 
-			'</span></p><img class="weather__image" src="' + obj.weather_img + 
-			'" alt=""><div class="weather-temp"><div class="weather-temp__min">' + 
-			obj.temp_min + ' <sup>o</sup><span>C ...</span></div>' + 
-			'<div class="weather-temp__max">... ' + obj.temp_max + 
-			' <sup>o</sup><span>C</span></div></div></div>';
-			$(this.element).append(template);
-			$(this.element).find('#saveLocation').attr('checked', this.settings.fixLocation);
-			$(this.element).find('#saveLocation').on('change', this._saveChooise.bind(this));
-			$(this.element).find('.weather-location__name').on('click', this._selectCity.bind(this));
+			if (this.settings.city) {
+				let obj = this.settings;
+				let template = 
+					`<div class="holder">
+						<p class="weather-location">
+							<input class="save-location" type="checkbox" name="checkbox" id="saveLocation"/>
+							<span class="weather-location__name">${obj.city}, ${obj.country}</span>
+						</p>
+						<img class="weather__image" src="${obj.weather_img}" alt="">
+						<div class="weather-temp">
+							<div class="weather-temp__min">${obj.temp_min}<sup>o</sup><span>C ...</span></div>
+							<div class="weather-temp__max">... ${obj.temp_max}<sup>o</sup><span>C</span></div>
+						</div>
+					</div>`;
+				this._destroyView();
+				$(this.element).append(template);
+				$(this.element).find('#saveLocation').attr('checked', this.settings.fixLocation);
+				$(this.element).find('#saveLocation').on('change', this._saveChooise.bind(this));
+				$(this.element).find('.weather-location__name').on('click', this._selectCity.bind(this));
+			}
 		},
 		_saveChooise: function(){
-			var obj = this.settings;
 			this.settings.fixLocation = !this.settings.fixLocation;
 			if(this.settings.fixLocation){
 				$(this.element).find('#saveLocation').attr('checked', 'true');
@@ -171,12 +161,9 @@
 		_loadStorage: function(){
 			return JSON.parse(localStorage.getItem(pluginName + $(this.element).index()));
 		},
-		_destroyData: function(){
+		_destroyView: function(){
 			$(this.element).empty();
 		},
 	});
 $('.weather').weatherApi();
 })(jQuery);
-
-
-
